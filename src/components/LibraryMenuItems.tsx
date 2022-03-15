@@ -22,6 +22,7 @@ import { Tooltip } from "./Tooltip";
 
 import "./LibraryMenuItems.scss";
 import { VERSIONS } from "../constants";
+import vmwareLibraryItems from "../library/lib.json";
 
 const LibraryMenuItems = ({
   libraryItems,
@@ -314,6 +315,11 @@ const LibraryMenuItems = ({
           <div className="separator">{t("labels.excalidrawLib")} </div>
 
           {renderLibrarySection(publishedItems)}
+        </>
+
+        <>
+          <div className="separator">VMware Library</div>
+          {renderLibrarySection(vmwareLibraryItems as LibraryItem[])}
         </>
       </Stack.Col>
     </div>
