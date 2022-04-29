@@ -49,11 +49,14 @@ const elements = [
     opacity: 100,
     seed: 1683771448,
     text: "test",
-    font: "20px Virgil",
+    font: "20px Metropolis-Regular",
     baseline: 22,
   },
 ];
 
+registerFont("./public/Metropolis-Regular.ttf", {
+  family: "Metropolis-Regular",
+});
 registerFont("./public/Virgil.woff2", { family: "Virgil" });
 registerFont("./public/Cascadia.woff2", { family: "Cascadia" });
 

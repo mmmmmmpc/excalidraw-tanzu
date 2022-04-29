@@ -33,6 +33,7 @@ import {
   TextAlignTopIcon,
   TextAlignBottomIcon,
   TextAlignMiddleIcon,
+  FontFamilyVMwareIcon,
 } from "../components/icons";
 import {
   DEFAULT_FONT_FAMILY,
@@ -651,6 +652,11 @@ export const actionChangeFontFamily = register({
       text: string;
       icon: JSX.Element;
     }[] = [
+      {
+        value: FONT_FAMILY.Metropolis,
+        text: t("labels.VMware"),
+        icon: <FontFamilyVMwareIcon theme={appState.theme} />,
+      },
       {
         value: FONT_FAMILY.Virgil,
         text: t("labels.handDrawn"),

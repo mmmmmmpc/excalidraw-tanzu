@@ -853,6 +853,26 @@ export const FontFamilyCodeIcon = React.memo(({ theme }: { theme: Theme }) =>
   ),
 );
 
+export const FontFamilyVMwareIcon = React.memo(({ theme }: { theme: Theme }) =>
+  createIcon(
+    <>
+      <polygon
+        fill={iconFillColor(theme)}
+        points="30 30 29 30 29 7.01 7 7.01 7 28.97 26.66 28.97 26.66 29.97 6 29.97 6 6 30 6 30 30"
+      />
+      <path
+        fill={iconFillColor(theme)}
+        d="M12.38,16.14h.68l1.37,3.43,1.35-3.43h.67l-1.73,4.13h-.58Z"
+      />
+      <path
+        fill={iconFillColor(theme)}
+        d="M23.22,17.64v2.63h-.6V17.72a1,1,0,0,0-.95-1.14,1,1,0,0,0-1.12,1.06v2.63H20V17.72A1,1,0,0,0,19,16.58a1,1,0,0,0-1.12,1.06v2.63h-.6V16.14h.6v.61a1.3,1.3,0,0,1,1.2-.7,1.39,1.39,0,0,1,1.33.87,1.36,1.36,0,0,1,1.34-.87A1.47,1.47,0,0,1,23.22,17.64Z"
+      />
+    </>,
+    { width: 36, height: 36 },
+  ),
+);
+
 export const TextAlignLeftIcon = React.memo(({ theme }: { theme: Theme }) =>
   createIcon(
     <path

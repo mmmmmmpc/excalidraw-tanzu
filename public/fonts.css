@@ -11,3 +11,10 @@
   src: url("Cascadia.woff2");
   font-display: swap;
 }
+
+/* VMware font */
+@font-face {
+  font-family: "Metropolis-Regular";
+  src: url("Metropolis-Regular.ttf");
+  font-display: swap;
+}

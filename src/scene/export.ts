@@ -134,6 +134,10 @@ export const exportToSvg = async (
   <defs>
     <style>
       @font-face {
+        font-family: "Metropolis-Regular";
+        src: url("${assetPath}Metropolis-Regular.ttf");
+      }
+      @font-face {
         font-family: "Virgil";
         src: url("${assetPath}Virgil.woff2");
       }
