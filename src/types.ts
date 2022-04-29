@@ -77,8 +77,11 @@ export type AppState = {
   // (e.g. text element when typing into the input)
   editingElement: NonDeletedExcalidrawElement | null;
   editingLinearElement: LinearElementEditor | null;
-  elementType: typeof SHAPES[number]["value"] | "eraser";
-  elementLocked: boolean;
+  activeTool: {
+    type: typeof SHAPES[number]["value"] | "eraser";
+    lastActiveToolBeforeEraser: typeof SHAPES[number]["value"] | null;
+    locked: boolean;
+  };
   penMode: boolean;
   penDetected: boolean;
   exportBackground: boolean;
@@ -206,13 +209,25 @@ export type ExcalidrawAPIRefValue =
       ready?: false;
     };
 
+export type ExcalidrawInitialDataState = Merge<
+  ImportedDataState,
+  {
+    libraryItems?:
+      | Required<ImportedDataState>["libraryItems"]
+      | Promise<Required<ImportedDataState>["libraryItems"]>;
+  }
+>;
+
 export interface ExcalidrawProps {
   onChange?: (
     elements: readonly ExcalidrawElement[],
     appState: AppState,
     files: BinaryFiles,
   ) => void;
-  initialData?: ImportedDataState | null | Promise<ImportedDataState | null>;
+  initialData?:
+    | ExcalidrawInitialDataState
+    | null
+    | Promise<ExcalidrawInitialDataState | null>;
   excalidrawRef?: ForwardRef<ExcalidrawAPIRefValue>;
   onCollabButtonClick?: () => void;
   isCollaborating?: boolean;
@@ -323,6 +338,7 @@ export type AppClassProperties = {
     }
   >;
   files: BinaryFiles;
+  deviceType: App["deviceType"];
 };
 
 export type PointerDownState = Readonly<{
@@ -384,7 +400,12 @@ export type PointerDownState = Readonly<{
   boxSelection: {
     hasOccurred: boolean;
   };
-  elementIdsToErase: { [key: ExcalidrawElement["id"]]: boolean };
+  elementIdsToErase: {
+    [key: ExcalidrawElement["id"]]: {
+      opacity: ExcalidrawElement["opacity"];
+      erase: boolean;
+    };
+  };
 }>;
 
 export type ExcalidrawImperativeAPI = {
@@ -407,4 +428,9 @@ export type ExcalidrawImperativeAPI = {
   readyPromise: ResolvablePromise<ExcalidrawImperativeAPI>;
   ready: true;
   id: string;
+};
+
+export type DeviceType = {
+  isMobile: boolean;
+  isTouchScreen: boolean;
 };

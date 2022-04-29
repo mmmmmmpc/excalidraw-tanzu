@@ -544,6 +544,29 @@ describe("textWysiwyg", () => {
       expect((h.elements[1] as ExcalidrawTextElement).containerId).toBe(null);
     });
 
+    it("should'nt bind text to container when not double clicked on center", async () => {
+      expect(h.elements.length).toBe(1);
+      expect(h.elements[0].id).toBe(rectangle.id);
+
+      // clicking somewhere on top left
+      mouse.doubleClickAt(rectangle.x + 20, rectangle.y + 20);
+      expect(h.elements.length).toBe(2);
+
+      const text = h.elements[1] as ExcalidrawTextElementWithContainer;
+      expect(text.type).toBe("text");
+      expect(text.containerId).toBe(null);
+      mouse.down();
+      const editor = document.querySelector(
+        ".excalidraw-textEditorContainer > textarea",
+      ) as HTMLTextAreaElement;
+
+      fireEvent.change(editor, { target: { value: "Hello World!" } });
+
+      await new Promise((r) => setTimeout(r, 0));
+      editor.blur();
+      expect(rectangle.boundElements).toBe(null);
+    });
+
     it("should update font family correctly on undo/redo by selecting bounded text when font family was updated", async () => {
       expect(h.elements.length).toBe(1);
 
@@ -704,7 +727,7 @@ describe("textWysiwyg", () => {
       expect(text.width).toBe(rectangle.width - BOUND_TEXT_PADDING * 2);
     });
 
-    it("should unbind bound text when unbind action from context menu is triggred", async () => {
+    it("should unbind bound text when unbind action from context menu is triggered", async () => {
       expect(h.elements.length).toBe(1);
       expect(h.elements[0].id).toBe(rectangle.id);
 
@@ -744,6 +767,48 @@ describe("textWysiwyg", () => {
       expect((h.elements[1] as ExcalidrawTextElement).containerId).toEqual(
         null,
       );
+    });
+    it("shouldn't bind to container if container has bound text", async () => {
+      expect(h.elements.length).toBe(1);
+
+      Keyboard.withModifierKeys({}, () => {
+        Keyboard.keyPress(KEYS.ENTER);
+      });
+
+      expect(h.elements.length).toBe(2);
+
+      // Bind first text
+      let text = h.elements[1] as ExcalidrawTextElementWithContainer;
+      expect(text.containerId).toBe(rectangle.id);
+      let editor = document.querySelector(
+        ".excalidraw-textEditorContainer > textarea",
+      ) as HTMLTextAreaElement;
+      await new Promise((r) => setTimeout(r, 0));
+      fireEvent.change(editor, { target: { value: "Hello World!" } });
+      editor.blur();
+      expect(rectangle.boundElements).toStrictEqual([
+        { id: text.id, type: "text" },
+      ]);
+
+      // Attempt to bind another text
+      UI.clickTool("text");
+      mouse.clickAt(
+        rectangle.x + rectangle.width / 2,
+        rectangle.y + rectangle.height / 2,
+      );
+      mouse.down();
+      expect(h.elements.length).toBe(3);
+      text = h.elements[2] as ExcalidrawTextElementWithContainer;
+      editor = document.querySelector(
+        ".excalidraw-textEditorContainer > textarea",
+      ) as HTMLTextAreaElement;
+      await new Promise((r) => setTimeout(r, 0));
+      fireEvent.change(editor, { target: { value: "Whats up?" } });
+      editor.blur();
+      expect(rectangle.boundElements).toStrictEqual([
+        { id: h.elements[1].id, type: "text" },
+      ]);
+      expect(text.containerId).toBe(null);
     });
   });
 });

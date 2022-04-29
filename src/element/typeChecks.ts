@@ -61,7 +61,7 @@ export const isLinearElement = (
 };
 
 export const isLinearElementType = (
-  elementType: AppState["elementType"],
+  elementType: AppState["activeTool"]["type"],
 ): boolean => {
   return (
     elementType === "arrow" || elementType === "line" // || elementType === "freedraw"
@@ -70,21 +70,28 @@ export const isLinearElementType = (
 
 export const isBindingElement = (
   element?: ExcalidrawElement | null,
+  includeLocked = true,
 ): element is ExcalidrawLinearElement => {
-  return element != null && isBindingElementType(element.type);
+  return (
+    element != null &&
+    (!element.locked || includeLocked === true) &&
+    isBindingElementType(element.type)
+  );
 };
 
 export const isBindingElementType = (
-  elementType: AppState["elementType"],
+  elementType: AppState["activeTool"]["type"],
 ): boolean => {
   return elementType === "arrow";
 };
 
 export const isBindableElement = (
   element: ExcalidrawElement | null,
+  includeLocked = true,
 ): element is ExcalidrawBindableElement => {
   return (
     element != null &&
+    (!element.locked || includeLocked === true) &&
     (element.type === "rectangle" ||
       element.type === "diamond" ||
       element.type === "ellipse" ||
@@ -95,9 +102,11 @@ export const isBindableElement = (
 
 export const isTextBindableContainer = (
   element: ExcalidrawElement | null,
+  includeLocked = true,
 ): element is ExcalidrawTextContainer => {
   return (
     element != null &&
+    (!element.locked || includeLocked === true) &&
     (element.type === "rectangle" ||
       element.type === "diamond" ||
       element.type === "ellipse" ||

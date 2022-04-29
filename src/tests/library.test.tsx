@@ -14,12 +14,12 @@ describe("library", () => {
   });
 
   it("import library via drag&drop", async () => {
-    expect(await h.app.library.loadLibrary()).toEqual([]);
+    expect(await h.app.library.getLatestLibrary()).toEqual([]);
     await API.drop(
       await API.loadFile("./fixtures/fixture_library.excalidrawlib"),
     );
     await waitFor(async () => {
-      expect(await h.app.library.loadLibrary()).toEqual([
+      expect(await h.app.library.getLatestLibrary()).toEqual([
         {
           status: "unpublished",
           elements: [expect.objectContaining({ id: "A" })],
@@ -60,6 +60,6 @@ describe("library", () => {
     await waitFor(() => {
       expect(h.elements).toEqual([expect.objectContaining({ id: "A_copy" })]);
     });
-    expect(h.state.elementType).toBe("selection");
+    expect(h.state.activeTool.type).toBe("selection");
   });
 });

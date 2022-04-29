@@ -102,9 +102,11 @@ export const textWysiwyg = ({
 
   const updateWysiwygStyle = () => {
     const appState = app.state;
-    const updatedElement = Scene.getScene(element)?.getElement(
-      id,
-    ) as ExcalidrawTextElement;
+    const updatedElement =
+      Scene.getScene(element)?.getElement<ExcalidrawTextElement>(id);
+    if (!updatedElement) {
+      return;
+    }
     const { textAlign, verticalAlign } = updatedElement;
 
     const approxLineHeight = getApproxLineHeight(getFontString(updatedElement));
@@ -314,8 +316,6 @@ export const textWysiwyg = ({
   }
 
   editable.onkeydown = (event) => {
-    event.stopPropagation();
-
     if (!event.shiftKey && actionZoomIn.keyTest(event)) {
       event.preventDefault();
       app.actionManager.executeAction(actionZoomIn);

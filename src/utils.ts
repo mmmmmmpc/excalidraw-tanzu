@@ -268,13 +268,13 @@ export const setCursorForShape = (
   if (!canvas) {
     return;
   }
-  if (appState.elementType === "selection") {
+  if (appState.activeTool.type === "selection") {
     resetCursor(canvas);
-  } else if (appState.elementType === "eraser") {
+  } else if (appState.activeTool.type === "eraser") {
     setEraserCursor(canvas, appState.theme);
     // do nothing if image tool is selected which suggests there's
     // a image-preview set as the cursor
-  } else if (appState.elementType !== "image") {
+  } else if (appState.activeTool.type !== "image") {
     canvas.style.cursor = CURSOR_TYPE.CROSSHAIR;
   }
 };
@@ -575,6 +575,9 @@ export const arrayToMap = <T extends { id: string } | string>(
 export const isTestEnv = () =>
   typeof process !== "undefined" && process.env?.NODE_ENV === "test";
 
+export const isProdEnv = () =>
+  typeof process !== "undefined" && process.env?.NODE_ENV === "production";
+
 export const wrapEvent = <T extends Event>(name: EVENT, nativeEvent: T) => {
   return new CustomEvent(name, {
     detail: {
@@ -582,4 +585,58 @@ export const wrapEvent = <T extends Event>(name: EVENT, nativeEvent: T) => {
     },
     cancelable: true,
   });
+};
+
+export const updateObject = <T extends Record<string, any>>(
+  obj: T,
+  updates: Partial<T>,
+): T => {
+  let didChange = false;
+  for (const key in updates) {
+    const value = (updates as any)[key];
+    if (typeof value !== "undefined") {
+      if (
+        (obj as any)[key] === value &&
+        // if object, always update because its attrs could have changed
+        (typeof value !== "object" || value === null)
+      ) {
+        continue;
+      }
+      didChange = true;
+    }
+  }
+
+  if (!didChange) {
+    return obj;
+  }
+
+  return {
+    ...obj,
+    ...updates,
+  };
+};
+
+export const isPrimitive = (val: any) => {
+  const type = typeof val;
+  return val == null || (type !== "object" && type !== "function");
+};
+
+export const getFrame = () => {
+  try {
+    return window.self === window.top ? "top" : "iframe";
+  } catch (error) {
+    return "iframe";
+  }
+};
+
+export const isPromiseLike = (
+  value: any,
+): value is Promise<ResolutionType<typeof value>> => {
+  return (
+    !!value &&
+    typeof value === "object" &&
+    "then" in value &&
+    "catch" in value &&
+    "finally" in value
+  );
 };

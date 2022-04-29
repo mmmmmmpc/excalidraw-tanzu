@@ -135,7 +135,7 @@ describe("regression tests", () => {
   for (const [keys, shape, shouldSelect] of [
     [`2${KEYS.R}`, "rectangle", true],
     [`3${KEYS.D}`, "diamond", true],
-    [`4${KEYS.E}`, "ellipse", true],
+    [`4${KEYS.O}`, "ellipse", true],
     [`5${KEYS.A}`, "arrow", true],
     [`6${KEYS.L}`, "line", true],
     [`7${KEYS.X}`, "freedraw", false],
@@ -144,7 +144,7 @@ describe("regression tests", () => {
       it(`key ${key} selects ${shape} tool`, () => {
         Keyboard.keyPress(key);
 
-        expect(h.state.elementType).toBe(shape);
+        expect(h.state.activeTool.type).toBe(shape);
 
         mouse.down(10, 10);
         mouse.up(10, 10);
